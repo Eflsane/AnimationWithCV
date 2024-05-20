@@ -1,0 +1,50 @@
+.AllMenus {
+}
+
+.CoreMenuContainer {
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-self: flex-start;
+    width: auto;
+    height: auto;
+    min-width: 20%;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    position: relative;
+    flex-direction: column;
+}
+
+.CoreMenuButtons {
+    background-color: rgb(255, 255, 255);
+    width: 80px;
+    height: 80px;
+    min-height: auto;
+    min-width: auto;
+    left: 0;
+    top: 0;
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+    border-bottom-left-radius: 50%;
+    -unity-slice-scale: 1px;
+    -unity-background-scale-mode: scale-to-fit;
+    margin-top: 20%;
+    margin-left: 10%;
+}
+
+.SettingsContainer {
+}
+
+.SettingsMenuElems {
+    margin-top: 10%;
+    margin-right: 10%;
+    -unity-text-outline-width: 0.6px;
+    font-size: 21px;
+    -unity-text-align: middle-right;
+    color: rgb(255, 255, 255);
+    -unity-text-outline-color: rgb(0, 0, 0);
+    text-shadow: 3.5px 3.6px 24.3px rgb(0, 0, 0);
+}
