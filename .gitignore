@@ -120,3 +120,5 @@ crashlytics-build.properties
 /[Aa]ssets/[Pp]ythonProgram.meta
 /[Aa]ssets/[Pp]ythonProgram/PythonProgram/*
 /[Ll]ibrary/[Pp]ackageCache/com.unity.burst@1.8.13.Runtime/libburst-llvm-16.dylib
+/Assets/PythonProgram
+Library/PackageCache/com.unity.burst@1.8.13/.Runtime/libburst-llvm-16.dylib
