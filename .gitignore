@@ -116,3 +116,7 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+/[Aa]ssets/[Pp]ythonProgram.meta
+/[Aa]ssets/[Pp]ythonProgram/PythonProgram/*
+/[Ll]ibrary/[Pp]ackageCache/com.unity.burst@1.8.13.Runtime/libburst-llvm-16.dylib
