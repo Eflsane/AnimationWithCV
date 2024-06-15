@@ -19,7 +19,7 @@ public class LoadModel : MonoBehaviour
 
     private  void LoadLive2DModel()
     {
-        _path = System.IO.Directory.GetCurrentDirectory();;
+        _path = System.IO.Directory.GetCurrentDirectory();
 
         if (Application.isEditor)
         {

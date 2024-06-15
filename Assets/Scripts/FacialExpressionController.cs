@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 using System.Net.Sockets;
 using System.IO;
@@ -18,13 +19,7 @@ public class FacialExpressionController : MonoBehaviour
     private TcpListener _listener;
     CubismModel _model;
     
-    private int _port = 13967;
-    private string _host = "127.0.0.1";
-    private NetworkStream _stream;
-    private StreamReader _reader;
-    private TcpListener _tcpListener;
-    private Thread _tcpListenerThread;
-    public TcpClient connectedTcpClient;
+    
     public string receivedData = "";
 
     private Transform _cubismParameters;
@@ -40,13 +35,26 @@ public class FacialExpressionController : MonoBehaviour
     private FacialExpressionData _maxFaceData;
     private bool _isCalibrationCompleted;
 
+    private bool _isFaceParamsListening;
+
+    private TCPServerController _tcpServerController;
+    
+    private PythonModulesExecutor _pythonModulesExecutor;
+    private Process _faceParamsDetectionProcess;
+    private const string AbsoluteExeEditorPathWin = "\\Assets\\PythonProgram\\face_landmarks_detection.exe";
+    private const string AbsoluteExeReleasePathWin = "\\AnimationWithCV_Data\\StreamingAssets\\face_landmarks_detection.exe";
+
+    private bool _isFaceDetectionActive;
+    public Action FaceDetectionActive = () => { };
+    public Action FaceDetectionDeactivated = () => { };
+    
     // Start is called before the first frame update
     void Start()
     {
         _isCalibrating = false;
         _isCalibrationCompleted = false;
         //_model = _model.FindCubismModel(includeParents:true);
-
+        
         _model.transform.localScale *= 6.0f; 
         
         _cubismParameters = _model.transform.GetChild(0);
@@ -57,68 +65,65 @@ public class FacialExpressionController : MonoBehaviour
         _paramEyeROpen = _cubismParameters.Find("ParamEyeROpen");
         _paramMouthOpen = _cubismParameters.Find("ParamMouthOpenY");
 
-        
+        _tcpServerController = GetComponent<TCPServerController>();
+        _isFaceParamsListening = false;
+
+        _pythonModulesExecutor = GetComponent<PythonModulesExecutor>();
+
+        _isFaceDetectionActive = false;
     }
 
-    public void StartListeningTcp()
+    public void StartListeningFaceParams()
     {
-        _tcpListenerThread = new Thread (new ThreadStart(ListenForIncommingRequests));
-        _tcpListenerThread.IsBackground = true;
-        _tcpListenerThread.Start();
-    }
-
-    public void StopListeningTcp()
-    {
-        connectedTcpClient.GetStream().Close();
-        connectedTcpClient.Close();
-        _tcpListener.Stop();
-        _tcpListenerThread.Abort();
+        _tcpServerController.StartListeningTcp();
         
-        Debug.Log("Server has stopped listening");
-    }
-
-    private void ListenForIncommingRequests()
-    {
-        // Create listener on localhost port.          
-        _tcpListener = new TcpListener(IPAddress.Parse(_host), _port);
-        _tcpListener.Start();              
-        Debug.Log("Server is listening");
+        _isFaceParamsListening = true;
         
-        while (true) 
-        {
-            using (connectedTcpClient = _tcpListener.AcceptTcpClient())
-            {
-                // Get a stream object for reading
-                using (NetworkStream stream = connectedTcpClient.GetStream()) 
-                {
-                    int length;
-                    byte[] buffer =  new byte[connectedTcpClient.ReceiveBufferSize];
-                    // Read incoming stream into byte array.                        
-                    while ((length = stream.Read(buffer, 0, buffer.Length)) != 0) 
-                    {
-                        var incomingData = new byte[length];
-                        Array.Copy(buffer, 0, incomingData, 0, length);
-                        // Convert byte array to string message.                            
-                        string clientMessage = Encoding.ASCII.GetString(incomingData);
-                        Debug.Log("client message received as: " + clientMessage);
+        _faceParamsDetectionProcess = _pythonModulesExecutor.StartDetectionPythonModule(AbsoluteExeEditorPathWin, AbsoluteExeReleasePathWin,
+            _faceParamsDetectionProcess);
+        
+        print("Has started face params detection");
+    }
+    
 
-                        // Store the received data
-                        receivedData = clientMessage;
-                    }
-                }
-            }
-        }
+    public void StopListeningFaceParams()
+    {
+        _isFaceDetectionActive = false;
+        _isFaceParamsListening = false;
+        _tcpServerController.StopListeningTcp(); 
+        
+        _faceParamsDetectionProcess = _pythonModulesExecutor.
+            StopEmotionDetectionPythonModule(_faceParamsDetectionProcess);
+        
+        _tcpServerController.StopListeningTcp();
+        
+        print("Has stopped face params detection");
     }
 
+    
     // Update is called once per frame
     void LateUpdate()
     {
+        if (!_isFaceParamsListening)
+            return;
+        
+        receivedData = _tcpServerController?.GetReceivedData();
+
         if (receivedData == string.Empty)
             return;
         
         var facialExpressionData = JsonUtility.FromJson<FacialExpressionData>(receivedData);
         
+        if(facialExpressionData == null)
+            return;
 
+        if (!_isFaceDetectionActive)
+        {
+            _isFaceDetectionActive = true;
+            FaceDetectionActive.Invoke();
+        }
+            
+        
         if (_isCalibrationCompleted)
         {
             /*facialExpressionData.headRotX = (facialExpressionData.headRotX - _minFaceData.headRotX) /
@@ -135,10 +140,8 @@ public class FacialExpressionController : MonoBehaviour
             facialExpressionData.mouthOpenness = (facialExpressionData.mouthOpenness - _minFaceData.mouthOpenness) /
                                                  (_maxFaceData.mouthOpenness - _minFaceData.mouthOpenness);
             
-            
             print($"{_minFaceData.leftEye}, {_maxFaceData.leftEye}");
         }
-        
         
         // x - min(x)) / ( max(x) - min(x) 
         _model.Parameters[_paramRotX.GetSiblingIndex()].
@@ -159,13 +162,12 @@ public class FacialExpressionController : MonoBehaviour
         _model.Parameters[_paramMouthOpen.GetSiblingIndex()].
             BlendToValue(CubismParameterBlendMode.Override, 
                 facialExpressionData.mouthOpenness);
-        
     }
     
     void OnApplicationQuit()
     {
         // close the streams and the connection
-        StopListeningTcp();
+        StopListeningFaceParams();
     }
 
     IEnumerator CalibrateFaceInputs()
@@ -217,6 +219,7 @@ public class FacialExpressionController : MonoBehaviour
     {
         _model = model;
     }
+
 }
 
 [System.Serializable]

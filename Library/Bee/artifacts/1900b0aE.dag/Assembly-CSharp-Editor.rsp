@@ -118,6 +118,7 @@
 -define:CSHARP_7_OR_LATER
 -define:CSHARP_7_3_OR_NEWER
 -define:UNITY_EDITOR_ONLY_COMPILATION
+-r:"Assets/FlutterUnityIntegration/JsonDotNet/Assemblies/AOT/Newtonsoft.Json.dll"
 -r:"C:/Program Files/Unity/Hub/Editor/2022.3.26f1/Editor/Data/Managed/UnityEditor.Graphs.dll"
 -r:"C:/Program Files/Unity/Hub/Editor/2022.3.26f1/Editor/Data/Managed/UnityEngine/UnityEditor.CoreModule.dll"
 -r:"C:/Program Files/Unity/Hub/Editor/2022.3.26f1/Editor/Data/Managed/UnityEngine/UnityEditor.DeviceSimulatorModule.dll"
@@ -345,6 +346,7 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/Live2D.Cubism.Editor.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/Live2D.Cubism.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/PsdPlugin.ref.dll"
+-r:"Library/Bee/artifacts/1900b0aE.dag/SimpleFileBrowser.Runtime.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/Unity.2D.Animation.Editor.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/Unity.2D.Animation.Runtime.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/Unity.2D.Aseprite.Common.ref.dll"
@@ -391,6 +393,9 @@
 -analyzer:"C:/Program Files/Unity/Hub/Editor/2022.3.26f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll"
 "Assets/CubismPoser/Editor/AnimationWindowPipe.cs"
 "Assets/CubismPoser/Editor/CubismPoserEditor.cs"
+"Assets/FlutterUnityIntegration/Editor/Build.cs"
+"Assets/FlutterUnityIntegration/Editor/SweetShellHelper.cs"
+"Assets/FlutterUnityIntegration/Editor/XCodePostBuild.cs"
 -langversion:9.0
 /deterministic
 /optimize+
