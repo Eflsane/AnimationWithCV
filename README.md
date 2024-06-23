@@ -18,4 +18,4 @@ You should unpack without creating new folders. It should be like this:
 face_laandmarks_detection.7z -> AnimationWithCV_Data\StreamingAssets\face_laandmarks_detection.exe
 emotion_detection.7z -> AnimationWithCV_Data\StreamingAssets\emotion_detection.bat + emotion_detection folder
 
-To launch emotion detection also need to add .venv folder and download requirenments from file "requirenments.txt" 
+To launch emotion detection also need to add .venv folder and download requirenments from file "requirenments.txt" with pip Python
