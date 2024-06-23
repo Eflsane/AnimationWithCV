@@ -11,9 +11,11 @@ path: AnimationWithCV\Assets\PythonProgram\
 Last build:
 link: https://mega.nz/file/MuYAQS4Q#ZbBFBLm5dZ0P7EnkCZifrTiXyHGYG2XzRIqeg3GHIG8
 In folder with name of the build AnimationWithCV_Data\StreamingAssets you need also to unpack two archieves with Python modules:
-emotion_detection: https://mega.nz/file/crZnhBLI#8H5bsim7p8N0fr1x7W0Yr0aIf5EMr_yv51qGKzxMyVc
+emotion_detection: https://mega.nz/file/0zQW2a6D#vzymz5RL3_Tuqyq6Z5Zouoijtrz1DPkFE_DeszlyiXo
 face_laandmarks_detection: https://mega.nz/file/1nJVSS7T#Lnae0KwVufclesjGo-P2j7tiAUNodcn09V9aCwqpDm4
 
 You should unpack without creating new folders. It should be like this:
 face_laandmarks_detection.7z -> AnimationWithCV_Data\StreamingAssets\face_laandmarks_detection.exe
 emotion_detection.7z -> AnimationWithCV_Data\StreamingAssets\emotion_detection.bat + emotion_detection folder
+
+To launch emotion detection also need to add .venv folder and download requirenments from file "requirenments.txt" 
